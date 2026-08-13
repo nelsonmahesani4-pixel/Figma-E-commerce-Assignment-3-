@@ -1,15 +1,27 @@
-// src/components/ProductCard.jsx
-import { Link } from "react-router-dom";
-
-export default function ProductCard({ product }) {
+function ProductCard({ product }) {
   return (
-    <div className="border p-4 rounded">
-      <img src={product.image} alt={product.name} />
-      <h3 className="mt-2">{product.name}</h3>
-      <p>${product.price}</p>
-      <Link to={`/product/${product.id}`} className="text-blue-500">
-        View Details
-      </Link>
+    <div>
+      <div className="bg-gray-100 rounded-xl h-52 sm:h-60 flex items-center justify-center">
+        <img
+          src={product.image}
+          alt={product.name}
+          className="h-full w-full object-contain"
+        />
+      </div>
+
+      <h3 className="font-semibold text-sm mt-2">
+        {product.name}
+      </h3>
+
+      <p className="text-yellow-400 text-sm">
+        ★★★★★
+      </p>
+
+      <p className="font-bold text-sm">
+        {product.price}
+      </p>
     </div>
   );
 }
+
+export default ProductCard;

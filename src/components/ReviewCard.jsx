@@ -1,10 +1,18 @@
-
-export default function ReviewCard({ review }) {
+function ReviewCard({ name, review }) {
   return (
-    <div className="p-4 border rounded">
-      <p>"{review.text}"</p>
-      <p className="text-yellow-500">⭐ {review.rating}</p>
-      <p>- {review.author}</p>
+    <div className="border rounded-xl p-4">
+
+      <p className="text-yellow-400">
+        ★★★★★
+      </p>
+      <h3 className="font-bold mt-2">
+        {name} ✓
+      </h3>
+      <p className="text-gray-500 text-sm mt-2">
+        "{review}"
+      </p>
     </div>
   );
 }
+
+export default ReviewCard;

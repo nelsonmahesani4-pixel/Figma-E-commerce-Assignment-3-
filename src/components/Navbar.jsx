@@ -1,16 +1,26 @@
-// src/components/Navbar.jsx
-import { Link } from "react-router-dom";
-
-export default function Navbar() {
+function Navbar() {
   return (
-    <nav className="flex justify-between items-center p-4 shadow">
-      <h1 className="text-xl font-bold">SHOP.CO</h1>
-      <div className="flex gap-4">
-        <Link to="/">Home</Link>
-        <Link to="/category/Casual">Casual</Link>
-        <Link to="/category/Formal">Formal</Link>
-        <Link to="/cart">Cart</Link>
+    <nav className="flex items-center justify-between px-6 md:px-16 py-5">
+
+      <h1 className="text-2xl font-black">
+        SHOP.CO
+      </h1>
+
+      <div className="hidden md:flex gap-8">
+        <a href="#">Shop</a>
+        <a href="#">On Sale</a>
+        <a href="#">New Arrivals</a>
+        <a href="#">Brands</a>
       </div>
+
+      <div className="flex gap-4">
+        <span>🔍</span>
+        <span>🛒</span>
+        <span>👤</span>
+      </div>
+
     </nav>
   );
 }
+
+export default Navbar;

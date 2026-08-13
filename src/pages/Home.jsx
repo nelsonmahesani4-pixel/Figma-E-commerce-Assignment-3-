@@ -1,45 +1,85 @@
-// src/pages/Home.jsx
+import Navbar from "../components/Navbar";
 import Hero from "../components/Hero";
+import Brand from "../components/Brand";
 import ProductCard from "../components/ProductCard";
-import CategoryCard from "../components/CategoryCard";
-import ReviewCard from "../components/ReviewCard";
+import DressStyle from "../components/DressStyle";
+import Customer from "../components/Customer";
+import Newsletter from "../components/Newsletter";
+import Footer from "../components/Footer";
 
-const products = [
-  { id: 1, name: "Loose Fit Tee", price: 35, image: "https://www.figma.com/design/WkZa1SVuqF1ZOsgDFLmAuC/E-commerce-Website-Template--Freebie---Community-?node-id=22-412&t=KVlQDMoJ8OgHW6NA-4" },
-  { id: 2, name: "Any Day Jeans", price: 55, image: "https://www.figma.com/design/WkZa1SVuqF1ZOsgDFLmAuC/E-commerce-Website-Template--Freebie---Community-?node-id=22-414&t=KVlQDMoJ8OgHW6NA-4" },
-];
-const categories = [
-  { name: "Casual", image: "/casual.png" },
-  { name: "Formal", image: "/formal.png" },
-];
+import { newArrivals} from "../data/product";
 
-const reviews = [
-  { text: "Great quality!", rating: 5, author: "Ali" },
-  { text: "Fast delivery!", rating: 4, author: "Sara" },
-];
-
-export default function Home() {
+function Home() {
   return (
     <div>
+
+      <Navbar />
       <Hero />
 
-      <section className="grid grid-cols-2 gap-4 p-6">
-        {products.map((p) => (
-          <ProductCard key={p.id} product={p} />
-        ))}
+      <Brand />
+
+      {/* New Arrivals */}
+      <section className="py-12 px-5">
+
+        <h2 className="text-2xl md:text-3xl font-black text-center">
+          NEW ARRIVALS
+        </h2>
+        <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
+
+          {newArrivals.map((product) => (
+            <ProductCard
+              key={product.id}
+              product={product}
+            />
+          ))}
+
+        </div>
+        <div className="text-center mt-8">
+          <button className="border px-8 py-2 rounded-full">
+            View All
+          </button>
+        </div>
+
       </section>
 
-      <section className="grid grid-cols-2 gap-4 p-6">
-        {categories.map((c) => (
-          <CategoryCard key={c.name} category={c} />
-        ))}
+
+      {/* Top Selling */}
+      <section className="py-12 px-5 border-t">
+
+        <h2 className="text-2xl md:text-3xl font-black text-center">
+          TOP SELLING
+        </h2>
+
+        <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
+
+          {newArrivals.map((product) => (
+            <ProductCard
+              key={product.id}
+              product={product}
+            />
+          ))}
+
+        </div>
+
+        <div className="text-center mt-8">
+          <button className="border px-8 py-2 rounded-full">
+            View All
+          </button>
+        </div>
+
       </section>
 
-      <section className="grid grid-cols-3 gap-4 p-6">
-        {reviews.map((r, i) => (
-          <ReviewCard key={i} review={r} />
-        ))}
-      </section>
+
+      <DressStyle />
+
+      <Customer />
+
+      <Newsletter />
+
+      <Footer />
+
     </div>
   );
 }
+
+export default Home;
