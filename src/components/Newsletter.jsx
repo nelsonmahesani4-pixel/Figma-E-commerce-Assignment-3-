@@ -9,9 +9,7 @@ function Newsletter() {
         <h2 className="text-2xl md:text-3xl font-black max-w-md">
           STAY UPTO DATE ABOUT OUR LATEST OFFERS
         </h2>
-
         <div className="mt-5 md:mt-0 w-full md:w-auto">
-
           <input
             type="email"
             placeholder="Enter your email"
@@ -27,15 +25,10 @@ function Newsletter() {
           stroke-width="2" 
           d="M5 13l4 4L19 7" />
   </svg>
-
           <Button title="Subscribe" className="mt-4" />
-
         </div>
-
       </div>
-
     </section>
   );
 }
-
 export default Newsletter;

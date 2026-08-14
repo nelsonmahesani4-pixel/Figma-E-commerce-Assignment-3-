@@ -1,53 +1,52 @@
 import { useState } from "react";
-import {
-  Routes,
-  Route,
-} from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 
 import Home from "./pages/Home";
 import ProductDetail from "./pages/ProductDetail";
 import Cart from "./pages/Cart";
+import CategoryPage from "./pages/Category";
 
 function App() {
 
   const [cart, setCart] = useState([]);
 
   return (
+    <Routes>
+      <Route
+        path="/"
+        element={
+          <Home
+            cart={cart}
+            setCart={setCart}
+          />
+        }
+      />
+      <Route
+        path="/product/:id"
+        element={
+          <ProductDetail
+            cart={cart}
+            setCart={setCart}
+          />
+        }
+      />
 
-      <Routes>
+      <Route
+        path="/cart"
+        element={
+          <Cart
+            cart={cart}
+            setCart={setCart}
+          />
+        }
+      />
 
-        <Route
-          path="/"
-          element={
-            <Home
-              cart={cart}
-              setCart={setCart}
-            />
-          }
-        />
+      <Route
+        path="/category/:name"
+        element={<CategoryPage />}
+      />
 
-        <Route
-          path="/product/:id"
-          element={
-            <ProductDetail
-              cart={cart}
-              setCart={setCart}
-            />
-          }
-        />
-
-        <Route
-          path="/cart"
-          element={
-            <Cart
-              cart={cart}
-              setCart={setCart}
-            />
-          }
-        />
-
-      </Routes>
-
+    </Routes>
   );
 }
 
