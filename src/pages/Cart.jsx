@@ -1,22 +1,41 @@
-// src/pages/CartPage.jsx
-import { useContext } from "react";
-import { CartContext } from "../context/CartContext";
+function Cart({ cart, setCart }) {
 
-export default function CartPage() {
-  const { cart } = useContext(CartContext);
+  function removeProduct(index) {
+
+    const newCart = cart.filter(
+      (_, i) => i !== index
+    );
+
+    setCart(newCart);
+  }
 
   return (
-    <div className="p-6">
+    <div>
+
       <h1>Your Cart</h1>
-      {cart.length === 0 ? (
-        <p>No items in cart</p>
-      ) : (
-        cart.map((item, index) => (
-          <div key={index} className="border p-2 my-2">
-            {item.name} - ${item.price}
-          </div>
-        ))
-      )}
+
+      {cart.map((product, index) => (
+
+        <div key={index}>
+
+          <h3>{product.name}</h3>
+
+          <p>${product.price}</p>
+
+          <button
+            onClick={() =>
+              removeProduct(index)
+            }
+          >
+            Remove
+          </button>
+
+        </div>
+
+      ))}
+
     </div>
   );
 }
+
+export default Cart;

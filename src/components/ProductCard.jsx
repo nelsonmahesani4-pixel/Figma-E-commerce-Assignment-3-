@@ -1,9 +1,10 @@
+import { Link } from "react-router-dom";
+
 function ProductCard({ product }) {
   return (
     <div>
       <div className="bg-gray-100 rounded-xl h-52 sm:h-60 flex items-center justify-center">
-        <img
-          src={product.image}
+        <img src={product.image}
           alt={product.name}
           className="h-full w-full object-contain"
         />
@@ -20,6 +21,9 @@ function ProductCard({ product }) {
       <p className="font-bold text-sm">
         {product.price}
       </p>
+        <Link to={`/product/${product.id}`}>
+        View Product
+      </Link>
     </div>
   );
 }

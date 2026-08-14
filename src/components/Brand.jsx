@@ -1,6 +1,6 @@
 function Brand() {
   return (
-    <section className="bg-black text-white py-6 px-4">
+    <section className="bg-black text-white py-6 px-4 md:px-12">
       <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
 
         <span className="text-sm sm:text-lg md:text-2xl lg:text-3xl font-serif">

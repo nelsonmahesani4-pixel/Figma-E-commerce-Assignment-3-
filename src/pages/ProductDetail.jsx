@@ -1,24 +1,39 @@
-// src/pages/ProductDetail.jsx
 import { useParams } from "react-router-dom";
-import { useContext } from "react";
-import { CartContext } from "../context/CartContext";
+import products from "../data/product";
+function ProductDetail({ cart, setCart }) {
 
-export default function ProductDetail() {
   const { id } = useParams();
-  const { addToCart } = useContext(CartContext);
 
-  const product = { id, name: "Sample Product", price: 50 };
+  const product = products.find(
+    (item) => item.id === Number(id)
+  );
+
+  if (!product) {
+    return <h2>Product Not Found</h2>;
+  }
+
+  function addToCart() {
+    setCart([...cart, product]);
+  }
 
   return (
-    <div className="p-6">
-      <h2>{product.name}</h2>
-      <p>${product.price}</p>
-      <button
-        onClick={() => addToCart(product)}
-        className="bg-blue-500 text-white px-4 py-2 rounded"
-      >
+    <div>
+
+      <img
+        src={product.image}
+        alt={product.name}
+      />
+
+      <h1>{product.name}</h1>
+
+      <h2>${product.price}</h2>
+
+      <button onClick={addToCart}>
         Add to Cart
       </button>
+
     </div>
   );
 }
+
+export default ProductDetail;

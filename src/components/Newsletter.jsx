@@ -1,3 +1,5 @@
+import Button from "./Button";
+
 function Newsletter() {
   return (
     <section className="bg-black text-white rounded-xl mx-5 md:mx-16 px-6 py-7">
@@ -15,10 +17,18 @@ function Newsletter() {
             placeholder="Enter your email"
             className="w-full md:w-64 px-5 py-3 rounded-full text-black outline-none"
           />
+          <Button title="Enter Your Email" className="mt-4" />
+  <svg xmlns="http://www.w3.org/2000/svg" 
+       fill="none" viewBox="0 0 24 24" 
+       stroke="currentColor" 
+       class="w-4 h-4 text-green-500">
+    <path stroke-linecap="round" 
+          stroke-linejoin="round" 
+          stroke-width="2" 
+          d="M5 13l4 4L19 7" />
+  </svg>
 
-          <button className="bg-white text-black w-full md:w-auto px-6 py-3 rounded-full mt-2">
-            Subscribe
-          </button>
+          <Button title="Subscribe" className="mt-4" />
 
         </div>
 

@@ -1,11 +1,11 @@
 import React from 'react'
 
-function Button() {
+function Button({ title }) {
   return (
     <div>
-        <button className="bg-blue-500 text-white px-4 py-2 rounded">
-          Shop Now
-        </button>
+        <button className="bg-white text-black w-full md:w-auto px-18 py-3 rounded-full mt-2 hover:cursor-pointer transition-colors duration-300">
+            {title}
+          </button>
     </div>
   )
 }
