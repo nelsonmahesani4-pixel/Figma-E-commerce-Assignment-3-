@@ -1,7 +1,6 @@
 function ReviewCard({ name, review }) {
   return (
     <div className="border rounded-xl p-6 ">
-
       <p className="text-yellow-400">
         ★★★★★
       </p>
@@ -14,5 +13,4 @@ function ReviewCard({ name, review }) {
     </div>
   );
 }
-
 export default ReviewCard;

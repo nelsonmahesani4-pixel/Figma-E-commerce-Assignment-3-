@@ -41,7 +41,7 @@ function Hero() {
           </div>
         </div>
         <div>
-          <img src="" alt="Fashion" className="w-full"/>
+          <img src="../data/images/Her-Img.jpg" alt="Fashion" className="w-full"/>
         </div>
       </div>
     </section>

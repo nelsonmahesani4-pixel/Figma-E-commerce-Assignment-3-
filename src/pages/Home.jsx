@@ -6,7 +6,8 @@ import DressStyle from "../components/DressStyle";
 import Customer from "../components/Customer";
 import Newsletter from "../components/Newsletter";
 import Footer from "../components/Footer";
-import { newArrivals} from "../data/product";
+import  {newArrivals, topSelling
+} from "../data/product";
 import { Link } from "react-router-dom";
 
 function Home({ cart, setCart }) {
@@ -17,7 +18,6 @@ function Home({ cart, setCart }) {
       <Brand />
       {/* New Arrivals */}
       <section className="py-12 px-5">
-
         <h2 className="text-2xl md:text-3xl font-black text-center">
           NEW ARRIVALS
         </h2>
@@ -44,16 +44,16 @@ function Home({ cart, setCart }) {
           TOP SELLING
         </h2>
         <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
-          {newArrivals.map((product) => (
-            <ProductCard
-              key={product.id}
-              product={product}
-            />
-          ))}
+          {topSelling.map((product) => (
+  <ProductCard
+    key={product.id}
+    product={product}
+  />
+))}
         </div>
        <div className="text-center mt-8">
   <Link
-    to="/category/all"
+    to="/category/"
     className="border px-8 py-2 rounded-full inline-block"
   >
     View All
