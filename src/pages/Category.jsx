@@ -3,18 +3,13 @@ import {
   useParams,
   useSearchParams,
 } from "react-router-dom";
-
 import ProductCard from "../components/ProductCard";
 import Newsletter from "../components/Newsletter";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
-
 import products from "../data/product";
-
 function CategoryPage({ cart }) {
-
   const { name } = useParams();
-
   const [searchParams] = useSearchParams();
 
   const search = searchParams.get("search") || "";
@@ -23,10 +18,6 @@ function CategoryPage({ cart }) {
 
   const [selectedCategory, setSelectedCategory] =
     useState(name === "all" ? "All" : name);
-
-
-  // CATEGORY FILTER
-
   let filteredProducts = products;
 
   if (selectedCategory !== "All") {
@@ -38,10 +29,6 @@ function CategoryPage({ cart }) {
     );
 
   }
-
-
-  // SEARCH FILTER
-
   if (search !== "") {
 
     filteredProducts = filteredProducts.filter(
@@ -52,10 +39,6 @@ function CategoryPage({ cart }) {
     );
 
   }
-
-
-  // PRICE FILTER
-
   filteredProducts = filteredProducts.filter(
     (product) =>
       product.price <= maxPrice
@@ -77,14 +60,7 @@ function CategoryPage({ cart }) {
           Home &nbsp; / &nbsp; {name}
         </p>
 
-
-        {/* MAIN AREA */}
-
         <div className="flex gap-6">
-
-
-          {/* FILTER SIDEBAR */}
-
           <aside className="hidden md:block w-60 shrink-0 border rounded-2xl p-5 h-fit">
 
             <div className="flex justify-between items-center mb-6">
@@ -98,10 +74,6 @@ function CategoryPage({ cart }) {
               </span>
 
             </div>
-
-
-            {/* CATEGORY */}
-
             <div className="border-b pb-5">
 
               <h3 className="font-semibold mb-4">
@@ -142,9 +114,6 @@ function CategoryPage({ cart }) {
 
             </div>
 
-
-            {/* PRICE */}
-
             <div className="border-b py-5">
 
               <h3 className="font-semibold mb-4">
@@ -184,9 +153,7 @@ function CategoryPage({ cart }) {
               </h3>
 
               <div className="flex flex-wrap gap-3">
-
                 <button className="w-7 h-7 rounded-full bg-green-700 border-2 border-black"></button>
-
                 <button className="w-7 h-7 rounded-full bg-red-500"></button>
 
                 <button className="w-7 h-7 rounded-full bg-yellow-400"></button>
@@ -202,18 +169,12 @@ function CategoryPage({ cart }) {
               </div>
 
             </div>
-
-
-            {/* SIZE */}
-
             <div className="border-b py-5">
 
               <h3 className="font-semibold mb-4">
                 Size
               </h3>
-
               <div className="flex flex-wrap gap-2">
-
                 <button className="bg-gray-100 px-3 py-2 rounded-full text-xs">
                   XX-Small
                 </button>
@@ -264,10 +225,6 @@ function CategoryPage({ cart }) {
               </div>
 
             </div>
-
-
-            {/* APPLY */}
-
             <button
               className="w-full bg-black text-white rounded-full py-3"
             >
@@ -275,14 +232,7 @@ function CategoryPage({ cart }) {
             </button>
 
           </aside>
-
-
-          {/* PRODUCTS SIDE */}
-
           <section className="flex-1">
-
-
-            {/* TITLE */}
 
             <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6">
 
@@ -299,10 +249,6 @@ function CategoryPage({ cart }) {
                 </p>
 
               </div>
-
-
-              {/* SORT */}
-
               <div className="mt-4 sm:mt-0 text-sm">
 
                 <label className="mr-2">
@@ -326,19 +272,11 @@ function CategoryPage({ cart }) {
               </div>
 
             </div>
-
-
-            {/* MOBILE FILTER BUTTON */}
-
             <button
               className="md:hidden w-full bg-black text-white rounded-full py-3 mb-5"
             >
               ⚙ Filters
             </button>
-
-
-            {/* PRODUCT GRID */}
-
             <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-8">
 
               {filteredProducts.map(
@@ -353,10 +291,6 @@ function CategoryPage({ cart }) {
               )}
 
             </div>
-
-
-            {/* NO PRODUCTS */}
-
             {filteredProducts.length === 0 && (
 
               <div className="text-center py-16">
@@ -372,10 +306,6 @@ function CategoryPage({ cart }) {
               </div>
 
             )}
-
-
-            {/* PAGINATION */}
-
             {filteredProducts.length > 0 && (
 
               <div className="flex justify-center items-center gap-3 mt-12">
