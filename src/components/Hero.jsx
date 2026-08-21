@@ -1,5 +1,15 @@
 import Button from "./Button";
 
+
+
+
+
+
+
+
+
+
+
 function Hero() {
   return (
     <section className="bg-gray-100 px-6 md:px-16 py-12">

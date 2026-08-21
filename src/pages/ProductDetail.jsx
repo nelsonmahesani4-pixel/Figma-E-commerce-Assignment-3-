@@ -1,199 +1,360 @@
-import { useParams, useNavigate, Link } from "react-router-dom";
-import products, { newArrivals } from "../data/product";
+import { useEffect, useState } from "react";
+import { useParams, Link } from "react-router-dom";
+
+import Navbar from "../components/Navbar";
+import Breadcrumb from "../components/Breadcrumb";
+import QuantitySelector from "../components/QuantitySelector";
+import Button from "../components/Button";
+import ProductCard from "../components/ProductCard";
+import ReviewCard from "../components/ReviewCard";
 import Newsletter from "../components/Newsletter";
 import Footer from "../components/Footer";
-import React from "react";
-import ProductCard from "../components/ProductCard";
+
 function ProductDetail({ cart, setCart }) {
   const { id } = useParams();
-  const navigate = useNavigate();
-  const product = products.find(
-    (item) => item.id === Number(id)
-  );
-  const [quantity, setQuantity] = React.useState(1);
+
+  const [product, setProduct] = useState(null);
+  const [related, setRelated] = useState([]);
+
+  const [loading, setLoading] = useState(true);
+
+  const [activeImage, setActiveImage] = useState(0);
+  const [selectedColor, setSelectedColor] = useState("");
+  const [selectedSize, setSelectedSize] = useState("");
+  const [quantity, setQuantity] = useState(1);
+
+  // Get product from backend
+  useEffect(() => {
+    fetch(`http://localhost:5000/api/products/${id}`)
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Product not found");
+        }
+
+        return res.json();
+      })
+      .then((data) => {
+        console.log("Product from Backend:", data);
+
+        setProduct(data);
+
+        // Set default color and size
+        if (data.colors && data.colors.length > 0) {
+          setSelectedColor(data.colors[0]);
+        }
+
+        if (data.sizes && data.sizes.length > 0) {
+          setSelectedSize(data.sizes[0]);
+        }
+
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching product:", error);
+        setProduct(null);
+        setLoading(false);
+      });
+  }, [id]);
+
+  // Get related products from backend
+  useEffect(() => {
+    if (!product) return;
+
+    fetch("http://localhost:5000/api/products")
+      .then((res) => res.json())
+      .then((data) => {
+        const relatedProducts = data.filter(
+          (item) =>
+            item.category === product.category &&
+            item.id !== product.id
+        );
+
+        setRelated(relatedProducts.slice(0, 4));
+      })
+      .catch((error) => {
+        console.error("Error fetching related products:", error);
+      });
+  }, [product]);
+
+  // Loading
+  if (loading) {
+    return (
+      <div>
+        <Navbar cart={cart} />
+
+        <div className="px-5 md:px-16 py-20 text-center">
+          <p>Loading product...</p>
+        </div>
+
+        <Footer />
+      </div>
+    );
+  }
+
+  // Product not found
   if (!product) {
-    return <h2>Product Not Found</h2>;
+    return (
+      <div>
+        <Navbar cart={cart} />
+
+        <div className="px-5 md:px-16 py-20 text-center">
+          <p>Sorry, we couldn't find that product.</p>
+
+          <Link to="/" className="underline">
+            Back to Home
+          </Link>
+        </div>
+
+        <Footer />
+      </div>
+    );
   }
-  function addToCart() {
-    for (let i = 0; i < quantity; i++) {
-      setCart([...cart, product]);
-    }
-    navigate("/cart");
+
+  // Add product to cart
+  function handleAddToCart() {
+    setCart((prevCart) => {
+      // Check if same product + color + size already exists
+      const existing = prevCart.find(
+        (item) =>
+          item.id === product.id &&
+          item.color === selectedColor &&
+          item.size === selectedSize
+      );
+
+      // If already exists, increase quantity
+      if (existing) {
+        return prevCart.map((item) =>
+          item === existing
+            ? {
+                ...item,
+                quantity: item.quantity + quantity,
+              }
+            : item
+        );
+      }
+
+      // Otherwise add new product
+      return [
+        ...prevCart,
+        {
+          id: product.id,
+          name: product.name,
+          price: product.price,
+          image: product.image,
+          color: selectedColor,
+          size: selectedSize,
+          quantity: quantity,
+        },
+      ];
+    });
   }
+
   return (
     <div>
-      <section className="max-w-7xl mx-auto px-5 py-8">
-        <p className="text-sm text-gray-500 mb-8">
-          Home &nbsp; / &nbsp; Shop &nbsp; / &nbsp; {product.name}
-        </p>
-        <div className="grid md:grid-cols-2 gap-10">
-          <div className="bg-gray-100 rounded-xl flex items-center justify-center h-[450px]">
+      <Navbar cart={cart} />
+
+      <Breadcrumb
+        items={[
+          { label: "Home", to: "/" },
+          { label: "Shop", to: "/category/all" },
+          {
+            label: product.category,
+            to: `/category/${product.category}`,
+          },
+          { label: product.name },
+        ]}
+      />
+
+      <div className="px-5 md:px-16 py-8 grid md:grid-cols-2 gap-10">
+
+        {/* Image Gallery */}
+        <div>
+          <div className="bg-gray-100 rounded-2xl h-80 md:h-[420px] flex items-center justify-center">
             <img
-              src={product.image}
+              src={
+                product.gallery && product.gallery.length > 0
+                  ? product.gallery[activeImage]
+                  : product.image
+              }
               alt={product.name}
-              className="w-full h-full object-contain"
+              className="h-full w-full object-contain"
             />
           </div>
-          {/* product detail*/}
-          <div>
-            <h1 className="text-3xl md:text-4xl font-black">
-              {product.name}
-            </h1>
-            {/*rates*/}
-            <div className="flex items-center gap-2 mt-3">
-              <span className="text-yellow-400">
-                ★★★★★
-              </span>
-              <span className="text-sm">
-                4.5/5
+
+          {/* Gallery thumbnails */}
+          {product.gallery && product.gallery.length > 0 && (
+            <div className="flex gap-3 mt-4">
+              {product.gallery.map((img, index) => (
+                <button
+                  key={index}
+                  onClick={() => setActiveImage(index)}
+                  className={`bg-gray-100 rounded-xl h-20 w-20 flex items-center justify-center hover:cursor-pointer ${
+                    activeImage === index
+                      ? "ring-2 ring-black"
+                      : ""
+                  }`}
+                >
+                  <img
+                    src={img}
+                    alt=""
+                    className="h-full w-full object-contain"
+                  />
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Product Information */}
+        <div>
+          <h1 className="text-2xl md:text-3xl font-black">
+            {product.name}
+          </h1>
+
+          {/* Rating */}
+          <p className="text-yellow-400 mt-3">
+            ★★★★★{" "}
+            <span className="text-black text-sm">
+              {Number(product.rating || 0).toFixed(1)}/5
             </span>
-            </div>
-            <div className="flex items-center gap-4 mt-5">
-              <h2 className="text-2xl font-bold">
-                ${product.price}
-              </h2>
-              <span className="line-through text-gray-400">
-                $300
+          </p>
+
+          {/* Price */}
+          <p className="text-2xl font-bold mt-3">
+            ${product.price}
+
+            {product.oldPrice && (
+              <span className="text-gray-400 line-through font-normal ml-3">
+                ${product.oldPrice}
               </span>
-              <span className="bg-red-100 text-red-500 px-3 py-1 rounded-full text-sm">
-                -20%
-              </span>
-            </div>
-          {/*description*/}
-            <p className="text-gray-500 mt-5 leading-6">
-              This stylish product is made with high-quality
-              material and designed for everyday comfort.
-              Perfect for creating a modern and comfortable look.
-            </p>
-            <hr className="my-6" />
-            {/* COLORS */}
-            <p className="font-semibold">
-              Select Colors
-            </p>
-            <div className="flex gap-3 mt-3">
-              <button className="w-8 h-8 rounded-full bg-black border-2 border-gray-300"></button>
-              <button className="w-8 h-8 rounded-full bg-green-700 border-2 border-gray-300"></button>
-              <button className="w-8 h-8 rounded-full bg-blue-700 border-2 border-gray-300"></button>
-            </div>
-            <hr className="my-6" />
-            {/* product  size*/}
-            <p className="font-semibold">
-              Choose Size
-            </p>
-            <div className="flex gap-3 mt-3">
-              <button className="px-5 py-2 bg-gray-100 rounded-full">
-                Small
-              </button>
-              <button className="px-5 py-2 bg-gray-100 rounded-full">
-                Medium
-              </button>
-              <button className="px-5 py-2 bg-black text-white rounded-full">
-                Large
-              </button>
-              <button className="px-5 py-2 bg-gray-100 rounded-full">
-                X-Large
-              </button>
-            </div>
-            <hr className="my-6" />
-            {/* cart*/}
-            <div className="flex gap-4">
-              <div className="flex items-center bg-gray-100 rounded-full">
-                <button
-                  onClick={() =>
-                    quantity > 1 &&
-                    setQuantity(quantity - 1)
-                  }
-                  className="px-5 py-3"
-                >
-                  -
-                </button>
-                <span>
-                  {quantity}
-                </span>
-                <button
-                  onClick={() =>
-                    setQuantity(quantity + 1)
-                  }
-                  className="px-5 py-3"
-                >
-                  +
-                </button>
+            )}
+          </p>
+
+          {/* Description */}
+          <p className="text-gray-500 text-sm mt-4">
+            {product.description}
+          </p>
+
+          {/* Colors */}
+          {product.colors && product.colors.length > 0 && (
+            <div className="mt-6">
+              <p className="text-sm text-gray-500 mb-2">
+                Select Colors
+              </p>
+
+              <div className="flex gap-3">
+                {product.colors.map((color) => (
+                  <button
+                    key={color}
+                    onClick={() => setSelectedColor(color)}
+                    style={{
+                      backgroundColor: color,
+                    }}
+                    className={`w-8 h-8 rounded-full hover:cursor-pointer ${
+                      selectedColor === color
+                        ? "ring-2 ring-offset-2 ring-black"
+                        : ""
+                    }`}
+                    aria-label={color}
+                  />
+                ))}
               </div>
-              <button
-                onClick={addToCart}
-                className="flex-1 bg-black text-white rounded-full py-3"
-              >
-                Add to Cart
-            </button>
+            </div>
+          )}
+
+          {/* Sizes */}
+          {product.sizes && product.sizes.length > 0 && (
+            <div className="mt-6">
+              <p className="text-sm text-gray-500 mb-2">
+                Choose Size
+              </p>
+
+              <div className="flex flex-wrap gap-2">
+                {product.sizes.map((size) => (
+                  <button
+                    key={size}
+                    onClick={() => setSelectedSize(size)}
+                    className={`px-4 py-2 rounded-full text-sm border hover:cursor-pointer ${
+                      selectedSize === size
+                        ? "bg-black text-white border-black"
+                        : "bg-gray-100 border-gray-100"
+                    }`}
+                  >
+                    {size}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Quantity + Add to Cart */}
+          <div className="flex items-center gap-4 mt-8">
+            <QuantitySelector
+              quantity={quantity}
+              onIncrease={() =>
+                setQuantity((q) => q + 1)
+              }
+              onDecrease={() =>
+                setQuantity((q) => Math.max(1, q - 1))
+              }
+            />
+
+            <div
+              onClick={handleAddToCart}
+              className="flex-1"
+            >
+              <Button title="Add to Cart" />
             </div>
           </div>
         </div>
-      </section>
-      {/* reviews */}
-      <section className="max-w-7xl mx-auto px-5 py-10">
-        <div className="border-b flex justify-between">
-          <button className="pb-4">
-            Product Details
-          </button>
-          <button className="font-bold border-b-2 border-black pb-4">
-            Rating & Reviews
-          </button>
-          <button className="pb-4">
-            FAQs
-          </button>
-        </div>
-        <div className="grid md:grid-cols-2 gap-5 mt-8">
-          <Review name="Sarah M." />
-          <Review name="Alex K." />
-          <Review name="Brian K." />
-          <Review name="Olivia R." />
+      </div>
 
-        </div>
-
-      </section>
-<section className="py-12 px-5 border-t">
-        <h2 className="text-2xl md:text-3xl font-black text-center">
-          YOU MIGHT ALSO LIKE 
+      {/* Reviews */}
+      <section className="px-5 md:px-16 py-10 border-t">
+        <h2 className="text-2xl font-black mb-6">
+          RATING & REVIEWS
         </h2>
-        <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
-          {newArrivals.map((product) => (
-            <ProductCard
-              key={product.id}
-              product={product}
-            />
-          ))}
+
+        <div className="grid md:grid-cols-3 gap-4">
+          <ReviewCard
+            name="Sarah M."
+            review="Great fit and the fabric feels premium. Exactly as pictured."
+          />
+
+          <ReviewCard
+            name="Alex K."
+            review="Fast shipping and true to size. Would buy again."
+          />
+
+          <ReviewCard
+            name="James L."
+            review="Good quality for the price. Very happy with it."
+          />
         </div>
-       <div className="text-center mt-8">
-  <Link
-    to="/category/all"
-    className="border px-8 py-2 rounded-full inline-block"
-  >
-    View All
-  </Link>
-</div>
       </section>
+
+      {/* Related Products */}
+      {related.length > 0 && (
+        <section className="px-5 md:px-16 py-10 border-t">
+          <h2 className="text-2xl md:text-3xl font-black text-center mb-8">
+            YOU MIGHT ALSO LIKE
+          </h2>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {related.map((item) => (
+              <ProductCard
+                key={item.id}
+                product={item}
+              />
+            ))}
+          </div>
+        </section>
+      )}
+
       <Newsletter />
       <Footer />
     </div>
   );
 }
-function Review({ name }) {
-  return (
-    <div className="border rounded-xl p-5">
-    <div className="text-yellow-400">
-        ★★★★★
-      </div>
-      <h3 className="font-bold mt-2">
-        {name}
-      </h3>
-     <p className="text-gray-500 text-sm mt-2">
-        Great product! The quality is really good and
-        the product looks exactly as shown.
-      </p>
-      <p className="text-gray-400 text-xs mt-4">
-        Posted on August 15, 2026
-      </p>
-    </div>
-  );
-}
+
 export default ProductDetail;

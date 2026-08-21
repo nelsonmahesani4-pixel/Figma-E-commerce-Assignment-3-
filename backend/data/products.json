@@ -1,0 +1,37 @@
+[
+  {
+    "id": 1,
+    "name": "T-shirt with Tape Details",
+    "price": 120,
+    "category": "Casual",
+    "image": "http://localhost:5000/images/product1.png"
+  },
+  {
+    "id": 2,
+    "name": "Skinny Fit Jeans",
+    "price": 240,
+    "category": "Jeans",
+    "image": "product2.png"
+  },
+  {
+    "id": 3,
+    "name": "Checkered Shirt",
+    "price": 180,
+    "category": "Formal",
+    "image": "product3.png"
+  },
+  {
+    "id": 4,
+    "name": "Sleeve Striped T-shirt",
+    "price": 130,
+    "category": "Casual",
+    "image": "product4.png"
+  },
+  {
+    "id": 5,
+    "name": "New Shirt",
+    "price": 150,
+    "category": "Casual",
+    "image": "product5.png"
+  }
+]

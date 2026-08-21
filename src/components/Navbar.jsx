@@ -29,7 +29,7 @@ function Navbar({ cart }) {
           <Link to="/category/all">
             Shop⌄
           </Link>
-          <Link to="/category/Casual">
+          <Link to="/category/">
             On Sale
           </Link>
           <Link to="/category/all">
